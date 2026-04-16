@@ -1,122 +1,199 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- WebSocket Configuration ---
-    // Postman par isi URL ne 101 status diya tha (trailing slash lazmi hai)
-    const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
+const CHAT_WS_URL = 'wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/';
 
-    const chatLauncher = document.getElementById('ai-chat-launcher');
-    const chatPanel = document.getElementById('ai-chat-panel');
-    const chatMessages = document.getElementById('ai-chat-messages');
-    const chatForm = document.getElementById('ai-chat-form');
-    const chatInput = document.getElementById('ai-chat-question');
-    const chatSend = document.getElementById('ai-chat-send');
+const CHAT_WIDGET_HTML = `
+<div id="ai-chat-widget" class="fixed bottom-6 right-6 z-[60]">
+  <button id="ai-chat-launcher" class="bg-primary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
+    <i class="fas fa-comment-dots text-2xl"></i>
+  </button>
 
-    let messages = [{ role: 'assistant', content: "Hi, I am Akhtar's CV assistant. Ask me anything!" }];
+  <div id="ai-chat-panel" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden">
+    <div class="bg-primary p-4 text-white flex justify-between items-center">
+      <div>
+        <h3 class="font-bold">Akhtar's AI Assistant</h3>
+        <p class="text-xs opacity-80">Ask me anything about Akhtar</p>
+      </div>
+      <button id="ai-chat-close" class="hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
 
-    // --- UI Logic: Messages Render karna ---
-    const renderMessages = () => {
-        chatMessages.innerHTML = '';
-        messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = `p-3 rounded-xl max-w-[85%] mb-2 ${
-                msg.role === 'user' 
-                ? 'bg-primary text-white ml-auto' 
-                : 'bg-gray-100 text-slate-800 mr-auto'
-            }`;
-            div.textContent = msg.content;
-            chatMessages.appendChild(div);
-        });
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
+    <div id="ai-chat-messages" class="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50 text-sm">
+      <div class="flex justify-start">
+        <div class="bg-white border p-3 rounded-lg shadow-sm max-w-[80%]">
+          Hi! I'm Akhtar's AI. How can I help you today?
+        </div>
+      </div>
+    </div>
 
-    // --- WebSocket Event Handlers ---
-    socket.onopen = () => {
-        console.log("✅ Connected to Backend");
-    };
+    <div class="p-4 border-t bg-white">
+      <form id="ai-chat-form" class="flex gap-2">
+        <input type="text" id="ai-chat-question" placeholder="Type a message..." class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+        <button id="ai-chat-send" type="submit" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-secondary">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;
 
-    socket.onmessage = (event) => {
-        console.log("📩 Raw data from backend:", event.data);
-        const data = JSON.parse(event.data);
-        
-        // "Thinking..." wala temporary message hatao
-        if (messages.length > 0 && messages[messages.length - 1].content === "Thinking...") {
-            messages.pop();
-        }
+const initChat = () => {
+  // If the widget is not already on the page, inject it first.
+  if (!document.getElementById('ai-chat-launcher') && !document.getElementById('chat-toggle')) {
+    document.body.insertAdjacentHTML('beforeend', CHAT_WIDGET_HTML);
+  }
 
-        // Backend se 'message' field handle karo
-        const reply = data.message || data.answer || "Sorry, I couldn't process that.";
-        messages.push({ role: 'assistant', content: reply });
-        
-        renderMessages();
-        
-        // Button aur input ko wapis enable karo
-        chatSend.disabled = false;
-        chatInput.disabled = false;
-        chatSend.innerText = "Send"; 
-    };
+  // Select elements only after the markup exists in the DOM.
+  const chatLauncher = document.getElementById('ai-chat-launcher') || document.getElementById('chat-toggle');
+  const chatPanel = document.getElementById('ai-chat-panel') || document.getElementById('chat-window');
+  const chatMessages = document.getElementById('ai-chat-messages') || document.getElementById('chat-messages');
+  const chatForm = document.getElementById('ai-chat-form') || document.getElementById('chat-form');
+  const chatInput = document.getElementById('ai-chat-question') || document.getElementById('chat-input');
+  const chatSend = document.getElementById('ai-chat-send') || chatForm?.querySelector('button[type="submit"]');
+  const closeBtn = document.getElementById('ai-chat-close') || document.getElementById('close-chat');
 
-    socket.onerror = (err) => {
-        console.error("❌ WebSocket Error:", err);
-        // Error aaye toh button unlock kar do taake user dobara try kar sakay
-        chatSend.disabled = false;
-        chatInput.disabled = false;
-        chatSend.innerText = "Send";
-    };
+  if (!chatMessages || !chatForm || !chatInput || !chatLauncher || !chatPanel) {
+    console.warn('[Chat] Widget elements not found. Initialization skipped.');
+    return;
+  }
 
-    socket.onclose = () => {
-        console.warn("⚠️ WebSocket connection closed.");
-    };
+  const messages = [
+    { role: 'assistant', content: "Hi, I am Akhtar's CV assistant. Ask me anything!" },
+  ];
 
-    // --- Chat Submit Logic ---
-    const askQuestion = (e) => {
-        e.preventDefault();
-        const question = chatInput.value.trim();
+  const renderMessages = () => {
+    chatMessages.innerHTML = '';
 
-        if (!question) return;
+    messages.forEach((msg) => {
+      const bubble = document.createElement('div');
+      bubble.className = `p-3 rounded-xl max-w-[85%] mb-2 ${
+        msg.role === 'user'
+          ? 'bg-primary text-white ml-auto'
+          : 'bg-gray-100 text-slate-800 mr-auto'
+      }`;
+      bubble.textContent = msg.content;
+      chatMessages.appendChild(bubble);
+    });
 
-        if (socket.readyState !== WebSocket.OPEN) {
-            alert("Backend is connecting... please wait a second.");
-            return;
-        }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  };
 
-        // UI update: User ka message aur "Thinking..." state
-        messages.push({ role: 'user', content: question });
-        messages.push({ role: 'assistant', content: "Thinking..." });
-        renderMessages();
+  const setControlsDisabled = (disabled) => {
+    chatInput.disabled = disabled;
+    if (chatSend) {
+      chatSend.disabled = disabled;
+    }
+  };
 
-        // Backend ko bhej rahe hain
-        try {
-            socket.send(JSON.stringify({ 'message': question }));
-            console.log("🚀 Message sent to backend");
-            
-            // Input clear aur button disable (jab tak response na aaye)
-            chatInput.value = '';
-            chatSend.disabled = true;
-            chatInput.disabled = true;
-            chatSend.innerText = "..."; 
-        } catch (error) {
-            console.error("Failed to send message:", error);
-            chatSend.disabled = false;
-            chatInput.disabled = false;
-        }
-    };
+  console.log('[Chat] Creating WebSocket:', CHAT_WS_URL);
+  const socket = new WebSocket(CHAT_WS_URL);
 
-    // Event Listeners
-    if (chatForm) {
-        chatForm.addEventListener('submit', askQuestion);
+  socket.onopen = () => {
+    console.log('[Chat] WebSocket open:', {
+      readyState: socket.readyState,
+      url: CHAT_WS_URL,
+    });
+  };
+
+  socket.onmessage = (event) => {
+    console.log('[Chat] Raw backend payload:', event.data);
+
+    if (messages.length > 0 && messages[messages.length - 1].content === 'Thinking...') {
+      messages.pop();
     }
 
-    if (chatLauncher && chatPanel) {
-        chatLauncher.addEventListener('click', () => {
-            chatPanel.classList.toggle('hidden');
-        });
+    let data = event.data;
+
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (error) {
+        data = { message: data };
+      }
     }
 
-    const closeBtn = document.getElementById('ai-chat-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            chatPanel.classList.add('hidden');
-        });
-    }
+    const reply =
+      data?.message ||
+      data?.answer ||
+      data?.response ||
+      data?.content ||
+      'Sorry, I could not process that.';
 
+    messages.push({ role: 'assistant', content: reply });
     renderMessages();
-});
+    setControlsDisabled(false);
+    if (chatSend) {
+      chatSend.textContent = 'Send';
+    }
+  };
+
+  socket.onerror = (event) => {
+    console.error('[Chat] WebSocket error:', event);
+    setControlsDisabled(false);
+    if (chatSend) {
+      chatSend.textContent = 'Send';
+    }
+  };
+
+  socket.onclose = (event) => {
+    console.warn('[Chat] WebSocket closed:', {
+      code: event.code,
+      reason: event.reason,
+      wasClean: event.wasClean,
+      readyState: socket.readyState,
+    });
+  };
+
+  const askQuestion = (event) => {
+    event.preventDefault();
+
+    const question = chatInput.value.trim();
+    if (!question) {
+      return;
+    }
+
+    if (socket.readyState !== WebSocket.OPEN) {
+      console.warn('[Chat] WebSocket is not open yet. Current state:', socket.readyState);
+      return;
+    }
+
+    messages.push({ role: 'user', content: question });
+    messages.push({ role: 'assistant', content: 'Thinking...' });
+    renderMessages();
+
+    try {
+      socket.send(JSON.stringify({ message: question }));
+      console.log('[Chat] Message sent:', question);
+
+      chatInput.value = '';
+      setControlsDisabled(true);
+      if (chatSend) {
+        chatSend.textContent = '...';
+      }
+    } catch (error) {
+      console.error('[Chat] Failed to send message:', error);
+      setControlsDisabled(false);
+      if (chatSend) {
+        chatSend.textContent = 'Send';
+      }
+    }
+  };
+
+  chatForm.addEventListener('submit', askQuestion);
+
+  chatLauncher.addEventListener('click', () => {
+    chatPanel.classList.toggle('hidden');
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      chatPanel.classList.add('hidden');
+    });
+  }
+
+  renderMessages();
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initChat);
+} else {
+  initChat();
+}
