@@ -36,28 +36,34 @@ const CHAT_WIDGET_HTML = `
 `;
 
 const initChat = () => {
-  // If the widget is not already on the page, inject it first.
-  if (!document.getElementById('ai-chat-launcher') && !document.getElementById('chat-toggle')) {
+  console.log('[Chat] Injection stage');
+
+  if (!document.getElementById('ai-chat-widget')) {
     document.body.insertAdjacentHTML('beforeend', CHAT_WIDGET_HTML);
   }
 
-  // Select elements only after the markup exists in the DOM.
-  const chatLauncher = document.getElementById('ai-chat-launcher') || document.getElementById('chat-toggle');
-  const chatPanel = document.getElementById('ai-chat-panel') || document.getElementById('chat-window');
-  const chatMessages = document.getElementById('ai-chat-messages') || document.getElementById('chat-messages');
-  const chatForm = document.getElementById('ai-chat-form') || document.getElementById('chat-form');
-  const chatInput = document.getElementById('ai-chat-question') || document.getElementById('chat-input');
-  const chatSend = document.getElementById('ai-chat-send') || chatForm?.querySelector('button[type="submit"]');
-  const closeBtn = document.getElementById('ai-chat-close') || document.getElementById('close-chat');
+  console.log('[Chat] Selection stage');
 
-  if (!chatMessages || !chatForm || !chatInput || !chatLauncher || !chatPanel) {
-    console.warn('[Chat] Widget elements not found. Initialization skipped.');
+  const chatWidget = document.getElementById('ai-chat-widget');
+  const chatLauncher = document.getElementById('ai-chat-launcher');
+  const chatPanel = document.getElementById('ai-chat-panel');
+  const chatMessages = document.getElementById('ai-chat-messages');
+  const chatForm = document.getElementById('ai-chat-form');
+  const chatInput = document.getElementById('ai-chat-question');
+  const chatSend = document.getElementById('ai-chat-send');
+  const closeBtn = document.getElementById('ai-chat-close');
+
+  if (!chatWidget || !chatLauncher || !chatPanel || !chatMessages || !chatForm || !chatInput || !chatSend) {
+    console.error('[Chat] Initialization failed: required elements were not found after injection.');
     return;
   }
 
   const messages = [
     { role: 'assistant', content: "Hi, I am Akhtar's CV assistant. Ask me anything!" },
   ];
+
+  let suppressNextSubmit = false;
+  let socket = null;
 
   const renderMessages = () => {
     chatMessages.innerHTML = '';
@@ -78,80 +84,78 @@ const initChat = () => {
 
   const setControlsDisabled = (disabled) => {
     chatInput.disabled = disabled;
-    if (chatSend) {
-      chatSend.disabled = disabled;
-    }
+    chatSend.disabled = disabled;
   };
 
-  console.log('[Chat] Creating WebSocket:', CHAT_WS_URL);
-  const socket = new WebSocket(CHAT_WS_URL);
-
-  socket.onopen = () => {
-    console.log('[Chat] WebSocket open:', {
-      readyState: socket.readyState,
-      url: CHAT_WS_URL,
-    });
-  };
-
-  socket.onmessage = (event) => {
-    console.log('[Chat] Raw backend payload:', event.data);
-
-    if (messages.length > 0 && messages[messages.length - 1].content === 'Thinking...') {
-      messages.pop();
+  const ensureSocket = () => {
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+      return socket;
     }
 
-    let data = event.data;
+    socket = new WebSocket(CHAT_WS_URL);
 
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (error) {
-        data = { message: data };
+    socket.onopen = () => {
+      console.log('[Chat] Socket Open');
+      setControlsDisabled(false);
+      chatSend.textContent = 'Send';
+    };
+
+    socket.onmessage = (event) => {
+      console.log('[Chat] Raw message:', event.data);
+
+      if (messages[messages.length - 1]?.content === 'Thinking...') {
+        messages.pop();
       }
-    }
 
-    const reply =
-      data?.message ||
-      data?.answer ||
-      data?.response ||
-      data?.content ||
-      'Sorry, I could not process that.';
+      let data = event.data;
+      if (typeof data === 'string') {
+        try {
+          data = JSON.parse(data);
+        } catch {
+          data = { message: data };
+        }
+      }
 
-    messages.push({ role: 'assistant', content: reply });
-    renderMessages();
-    setControlsDisabled(false);
-    if (chatSend) {
+      const reply =
+        data?.message ||
+        data?.answer ||
+        data?.response ||
+        data?.content ||
+        'Sorry, I could not process that.';
+
+      messages.push({ role: 'assistant', content: reply });
+      renderMessages();
+      setControlsDisabled(false);
       chatSend.textContent = 'Send';
-    }
-  };
+    };
 
-  socket.onerror = (event) => {
-    console.error('[Chat] WebSocket error:', event);
-    setControlsDisabled(false);
-    if (chatSend) {
+    socket.onerror = (event) => {
+      console.error('[Chat] Socket error:', event);
+      setControlsDisabled(false);
       chatSend.textContent = 'Send';
-    }
+    };
+
+    socket.onclose = (event) => {
+      console.warn('[Chat] Socket closed:', {
+        code: event.code,
+        reason: event.reason,
+        wasClean: event.wasClean,
+      });
+    };
+
+    return socket;
   };
 
-  socket.onclose = (event) => {
-    console.warn('[Chat] WebSocket closed:', {
-      code: event.code,
-      reason: event.reason,
-      wasClean: event.wasClean,
-      readyState: socket.readyState,
-    });
-  };
-
-  const askQuestion = (event) => {
-    event.preventDefault();
-
+  const askQuestion = () => {
     const question = chatInput.value.trim();
+
     if (!question) {
       return;
     }
 
-    if (socket.readyState !== WebSocket.OPEN) {
-      console.warn('[Chat] WebSocket is not open yet. Current state:', socket.readyState);
+    const activeSocket = ensureSocket();
+    if (activeSocket.readyState !== WebSocket.OPEN) {
+      console.warn('[Chat] Socket is not open yet. Current state:', activeSocket.readyState);
       return;
     }
 
@@ -160,24 +164,36 @@ const initChat = () => {
     renderMessages();
 
     try {
-      socket.send(JSON.stringify({ message: question }));
+      activeSocket.send(JSON.stringify({ message: question }));
       console.log('[Chat] Message sent:', question);
 
       chatInput.value = '';
       setControlsDisabled(true);
-      if (chatSend) {
-        chatSend.textContent = '...';
-      }
+      chatSend.textContent = '...';
     } catch (error) {
       console.error('[Chat] Failed to send message:', error);
       setControlsDisabled(false);
-      if (chatSend) {
-        chatSend.textContent = 'Send';
-      }
+      chatSend.textContent = 'Send';
     }
   };
 
-  chatForm.addEventListener('submit', askQuestion);
+  chatForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (suppressNextSubmit) {
+      suppressNextSubmit = false;
+      return;
+    }
+
+    askQuestion();
+  });
+
+  chatSend.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    suppressNextSubmit = true;
+    askQuestion();
+  });
 
   chatLauncher.addEventListener('click', () => {
     chatPanel.classList.toggle('hidden');
@@ -190,6 +206,7 @@ const initChat = () => {
   }
 
   renderMessages();
+  ensureSocket();
 };
 
 if (document.readyState === 'loading') {
