@@ -858,5 +858,104 @@
         this.reset();
       });
     </script>
+
+
+<div id="chat-widget-container" class="fixed bottom-6 right-6 z-[60]">
+  <button id="chat-toggle" class="bg-primary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
+    <i class="fas fa-comment-dots text-2xl"></i>
+  </button>
+
+  <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 overflow-hidden">
+    <div class="bg-primary p-4 text-white flex justify-between items-center">
+      <div>
+        <h3 class="font-bold">Akhtar's AI Assistant</h3>
+        <p class="text-xs opacity-80">Ask me anything about Akhtar</p>
+      </div>
+      <button id="close-chat" class="hover:text-gray-200"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div id="chat-messages" class="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50 text-sm">
+      <div class="flex justify-start">
+        <div class="bg-white border p-3 rounded-lg shadow-sm max-w-[80%]">
+          Hi! I'm Akhtar's AI. How can I help you today?
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 border-t bg-white">
+      <form id="chat-form" class="flex gap-2">
+        <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+        <button type="submit" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-secondary">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  const chatToggle = document.getElementById('chat-toggle');
+  const chatWindow = document.getElementById('chat-window');
+  const closeChat = document.getElementById('close-chat');
+  const chatForm = document.getElementById('chat-form');
+  const chatInput = document.getElementById('chat-input');
+  const chatMessages = document.getElementById('chat-messages');
+
+  // Open/Close Chat
+  chatToggle.addEventListener('click', () => {
+    chatWindow.classList.toggle('hidden');
+  });
+
+  closeChat.addEventListener('click', () => {
+    chatWindow.classList.add('hidden');
+  });
+
+  // Handle Sending Message
+  chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+
+    // Add User Message to UI
+    appendMessage('user', msg);
+    chatInput.value = '';
+
+    // Show Typing Indicator
+    const typingId = appendMessage('bot', '...', true);
+
+    try {
+      // Yahan tum apna backend URL dalo ge (Hugging Face wala)
+      // Example: const response = await fetch('YOUR_BACKEND_URL', { ... });
+      
+      // Filhal test ke liye simple reply:
+      setTimeout(() => {
+        document.getElementById(typingId).innerText = "I'm still learning! Contact Akhtar at akhtar.abbas8267@gmail.com for direct queries.";
+      }, 1000);
+      
+    } catch (error) {
+      document.getElementById(typingId).innerText = "Oops! Connection issue.";
+    }
+  });
+
+  function appendMessage(sender, text, isTyping = false) {
+    const id = 'msg-' + Date.now();
+    const wrapper = document.createElement('div');
+    wrapper.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
+    
+    const bubble = document.createElement('div');
+    bubble.id = id;
+    bubble.className = sender === 'user' 
+      ? 'bg-primary text-white p-3 rounded-lg shadow-sm max-w-[80%]' 
+      : 'bg-white border p-3 rounded-lg shadow-sm max-w-[80%]';
+    bubble.innerText = text;
+    
+    wrapper.appendChild(bubble);
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return id;
+  }
+</script>
+
+
+
   </body>
 </html>
