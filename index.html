@@ -21,13 +21,26 @@
       }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="./style.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      body { font-family: 'Inter', sans-serif; }
+      .animate-fade-in { animation: fadeIn 0.8s ease-in; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+      /* Filter buttons */
+      .filter-btn { transition: all 0.2s; }
+      .filter-btn.active { background-color: #2563eb; color: white; }
+
+      /* Project card hidden state */
+      .project-card { transition: all 0.3s ease; }
+      .project-card.hidden-card { display: none; }
+    </style>
     <meta property="og:image" content="https://bolt.new/static/og_default.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
   </head>
   <body class="bg-slate-50 text-slate-800 overflow-x-hidden">
-    <!-- Navigation (unchanged) -->
+    <!-- Navigation -->
     <nav class="fixed w-full bg-white shadow-md z-50 transition-all duration-300" id="navbar">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -61,7 +74,7 @@
       </div>
     </nav>
 
-    <!-- Hero Section (unchanged) -->
+    <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div class="animate-fade-in">
@@ -163,7 +176,6 @@
         <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
           A comprehensive overview of my technical expertise and the tools I work with
         </p>
-
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
@@ -173,15 +185,10 @@
               <h3 class="text-xl font-semibold text-gray-900">Programming</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Python (Advanced)
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> SQL
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Python (Advanced)</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> SQL</li>
             </ul>
           </div>
-
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white mr-4">
@@ -190,18 +197,13 @@
               <h3 class="text-xl font-semibold text-gray-900">Machine Learning</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Scikit-learn
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> ML Algorithms
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Model Training
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Scikit-learn</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> ML Algorithms</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Model Training</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> XGBoost / LightGBM</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Ensemble Methods</li>
             </ul>
           </div>
-
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white mr-4">
@@ -210,41 +212,26 @@
               <h3 class="text-xl font-semibold text-gray-900">Deep Learning</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> TensorFlow
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Keras
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Neural Networks
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> TensorFlow</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Keras</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Neural Networks</li>
             </ul>
           </div>
-
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white mr-4">
                 <i class="fas fa-language text-xl"></i>
               </div>
-              <h3 class="text-xl font-semibold text-gray-900">NLP</h3>
+              <h3 class="text-xl font-semibold text-gray-900">NLP & AI Agents</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Natural Language Processing
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> mBART
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Neural Machine Translation
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> LLM Concepts
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Natural Language Processing</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> mBART / Neural MT</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> LLM Concepts</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> RAG Pipelines</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> AI Agents</li>
             </ul>
           </div>
-
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white mr-4">
@@ -253,35 +240,23 @@
               <h3 class="text-xl font-semibold text-gray-900">Data Analysis</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Pandas
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> NumPy
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> EDA
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Pandas</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> NumPy</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> EDA</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Feature Engineering</li>
             </ul>
           </div>
-
           <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white mr-4">
                 <i class="fas fa-chart-bar text-xl"></i>
               </div>
-              <h3 class="text-xl font-semibold text-gray-900">Visualization</h3>
+              <h3 class="text-xl font-semibold text-gray-900">Visualization & Dev</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Data Visualization
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Matplotlib
-              </li>
-              <li class="flex items-center text-gray-600">
-                <i class="fas fa-check text-primary mr-2"></i> Seaborn
-              </li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Matplotlib / Seaborn</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> Django</li>
+              <li class="flex items-center text-gray-600"><i class="fas fa-check text-primary mr-2"></i> HTML / JavaScript</li>
             </ul>
           </div>
         </div>
@@ -292,12 +267,112 @@
     <section id="projects" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-4xl font-bold text-center text-gray-900 mb-4">Projects</h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          A showcase of my data science and machine learning projects
+        <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+          A showcase of my data science, machine learning and AI engineering projects
         </p>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10" id="filter-buttons">
+          <button class="filter-btn active px-5 py-2 rounded-full border-2 border-primary font-medium text-sm" data-filter="all">All</button>
+          <button class="filter-btn px-5 py-2 rounded-full border-2 border-primary font-medium text-sm text-primary" data-filter="ai-agents">AI Agents</button>
+          <button class="filter-btn px-5 py-2 rounded-full border-2 border-primary font-medium text-sm text-primary" data-filter="nlp">NLP</button>
+          <button class="filter-btn px-5 py-2 rounded-full border-2 border-primary font-medium text-sm text-primary" data-filter="ml">Machine Learning</button>
+          <button class="filter-btn px-5 py-2 rounded-full border-2 border-primary font-medium text-sm text-primary" data-filter="data-analysis">Data Analysis</button>
+          <button class="filter-btn px-5 py-2 rounded-full border-2 border-primary font-medium text-sm text-primary" data-filter="web">Web Dev</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+
+          <!-- Research Agent -->
+          <div class="project-card bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ai-agents">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-search text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">AI Agent</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Research Agent</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              An autonomous AI-powered research agent that can gather, analyze and synthesize information from multiple sources to answer complex queries.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LLM</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">AI Agents</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/Research_Agent" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- PDF Intelligence RAG -->
+          <div class="project-card bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ai-agents">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-file-pdf text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">RAG</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">PDF Intelligence RAG</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              A Retrieval-Augmented Generation system that allows users to interact with PDF documents using natural language, extracting precise answers from large documents.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">RAG</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LLM</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/pdf-intelligence-rag" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- AI Leave Application Agent -->
+          <div class="project-card bg-gradient-to-br from-teal-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ai-agents">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-robot text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-teal-600 bg-teal-100 px-3 py-1 rounded-full">AI Agent</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">AI Leave Application Agent</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              An intelligent AI agent that automates the process of drafting and submitting leave applications based on conversational input from users.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">AI Agent</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Automation</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/AI-Leave-Application-Agent" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- Portfolio Maker AI Agent -->
+          <div class="project-card bg-gradient-to-br from-cyan-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ai-agents">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-cyan-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-magic text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-cyan-600 bg-cyan-100 px-3 py-1 rounded-full">AI Agent</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Portfolio Maker AI Agent</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              An AI-powered agent that automatically generates professional portfolio websites based on user-provided information about their skills and projects.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">HTML</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">AI Agent</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LLM</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/portfolio-maker-ai-agent" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- Sentiment Analysis -->
+          <div class="project-card bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="nlp">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-smile text-xl"></i>
@@ -305,17 +380,21 @@
               <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">NLP</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Sentiment Analysis</h3>
-            <p class="text-gray-600 mb-4">
-              Built a sentiment analysis model to classify text data and extract emotional insights using NLP techniques and machine learning algorithms.
+            <p class="text-gray-600 mb-4 text-sm">
+              Built a sentiment analysis model using Logistic Regression and Naive Bayes to classify text into positive/negative sentiment with model comparison and evaluation metrics.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">NLP</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Scikit-learn</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas/text-sentiment-analysis" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+          <!-- Movie Recommendation System -->
+          <div class="project-card bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-film text-xl"></i>
@@ -323,35 +402,43 @@
               <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">ML</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Movie Recommendation System</h3>
-            <p class="text-gray-600 mb-4">
-              Developed a recommendation engine using collaborative filtering and content-based filtering to suggest personalized movie recommendations.
+            <p class="text-gray-600 mb-4 text-sm">
+              Collaborative filtering recommendation engine using the Surprise library and MovieLens dataset to suggest personalized movie recommendations.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Pandas</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">ML</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Surprise</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Collab Filtering</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas/Day5_Collaborative_Recommendation_System" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+          <!-- Heart Disease Prediction -->
+          <div class="project-card bg-gradient-to-br from-red-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
+              <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-heartbeat text-xl"></i>
               </div>
-              <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">ML</span>
+              <span class="text-xs font-semibold text-red-500 bg-red-100 px-3 py-1 rounded-full">ML</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Heart Disease Prediction</h3>
-            <p class="text-gray-600 mb-4">
-              Created a predictive model to assess heart disease risk using patient data and various machine learning classification algorithms.
+            <p class="text-gray-600 mb-4 text-sm">
+              Predictive model to assess heart disease risk using patient data and ML classification algorithms, including model evaluation and feature importance analysis.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Scikit-learn</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Classification</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+          <!-- Titanic Survival Prediction -->
+          <div class="project-card bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-ship text-xl"></i>
@@ -359,17 +446,87 @@
               <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">ML</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Titanic Survival Prediction</h3>
-            <p class="text-gray-600 mb-4">
-              Analyzed the Titanic dataset and built classification models to predict passenger survival based on various features and demographics.
+            <p class="text-gray-600 mb-4 text-sm">
+              End-to-end ML project on the Titanic dataset covering data preprocessing, feature engineering, model training (including ML pipelines), evaluation and visualization.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">EDA</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Pandas</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">ML Pipeline</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas/Day14-Titanic-ML-Project" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+          <!-- Student Performance Predictor -->
+          <div class="project-card bg-gradient-to-br from-green-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-graduation-cap text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">ML</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Student Performance Predictor</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              A machine learning model that predicts student academic performance based on various factors, helping identify at-risk students early for targeted interventions.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Regression</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Scikit-learn</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/student-performance-predictor" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- XGBoost & LightGBM Breast Cancer -->
+          <div class="project-card bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-microscope text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-orange-500 bg-orange-100 px-3 py-1 rounded-full">ML</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">XGBoost & LightGBM — Breast Cancer</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              Implementation and comparison of XGBoost and LightGBM classifiers on the Breast Cancer dataset, with training, evaluation metrics and results analysis.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">XGBoost</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LightGBM</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/Day-18-XGBoost-LightGBM-Breast-Cancer" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- Ensemble Learning -->
+          <div class="project-card bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ml">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-layer-group text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full">ML</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Ensemble Learning — Breast Cancer</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              Implementation of Ensemble techniques — Bagging, Random Forest, AdaBoost, Gradient Boosting — on the Breast Cancer dataset to improve classification accuracy and robustness.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Random Forest</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">AdaBoost</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/Day-17-Ensemble-Learning-Breast-Cancer" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- World Population Analysis -->
+          <div class="project-card bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="data-analysis">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-globe text-xl"></i>
@@ -377,33 +534,85 @@
               <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">Data Analysis</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">World Population Analysis</h3>
-            <p class="text-gray-600 mb-4">
-              Performed comprehensive analysis of global population trends, demographic shifts and regional patterns using data visualization.
+            <p class="text-gray-600 mb-4 text-sm">
+              Comprehensive EDA on the World Population dataset uncovering global and regional demographic trends using Python, Pandas, Matplotlib and Seaborn.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Pandas</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Visualization</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Seaborn</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas/Day7_world_population_eda" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2">
+          <!-- CO2 Emissions Analysis -->
+          <div class="project-card bg-gradient-to-br from-green-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="data-analysis">
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
+              <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white">
                 <i class="fas fa-cloud text-xl"></i>
               </div>
-              <span class="text-xs font-semibold text-primary bg-blue-100 px-3 py-1 rounded-full">Data Analysis</span>
+              <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Data Analysis</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">CO₂ Emissions Analysis</h3>
-            <p class="text-gray-600 mb-4">
-              Analyzed global CO₂ emission patterns, identified key contributors and visualized environmental trends over time.
+            <p class="text-gray-600 mb-4 text-sm">
+              Analyzed global CO₂ emission patterns, identified key contributors and visualized environmental trends over time using Python and NumPy.
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">NumPy</span>
               <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">EDA</span>
             </div>
+            <a href="https://github.com/Akhtar-Abas" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
           </div>
+
+          <!-- Advanced Feature Engineering -->
+          <div class="project-card bg-gradient-to-br from-violet-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="data-analysis">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-violet-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-cogs text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-violet-600 bg-violet-100 px-3 py-1 rounded-full">Data Analysis</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Advanced Feature Engineering</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              Advanced preprocessing techniques including target encoding for high-cardinality categories, log-transforms and real-world data challenge handling.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Feature Eng.</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Scikit-learn</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/advanced-feature-engineering" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
+          <!-- Django MLM Referral System -->
+          <div class="project-card bg-gradient-to-br from-emerald-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="web">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-network-wired text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Web Dev</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Django MLM Referral System</h3>
+            <p class="text-gray-600 mb-4 text-sm">
+              A Django-based multi-level marketing referral system with user hierarchy management, commission tracking and an admin dashboard.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Django</span>
+              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">SQL</span>
+            </div>
+            <a href="https://github.com/Akhtar-Abas/django-mlm-referral-system" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+              <i class="fab fa-github mr-1"></i> View on GitHub
+            </a>
+          </div>
+
         </div>
 
         <div class="text-center mt-12">
@@ -421,7 +630,6 @@
         <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
           Academic and professional references available upon request
         </p>
-
         <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition">
             <div class="flex items-center mb-4">
@@ -444,12 +652,9 @@
               </p>
             </div>
             <div class="mt-4 pt-4 border-t">
-              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                Selected for Inspection
-              </span>
+              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Selected for Inspection</span>
             </div>
           </div>
-
           <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition">
             <div class="flex items-center mb-4">
               <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
@@ -471,9 +676,7 @@
               </p>
             </div>
             <div class="mt-4 pt-4 border-t">
-              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                Selected for Inspection
-              </span>
+              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Selected for Inspection</span>
             </div>
           </div>
         </div>
@@ -488,7 +691,6 @@
           I'm always open to discussing new opportunities, collaborations, or projects. Feel free to reach out!
         </p>
         <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          <!-- Contact Info (unchanged) -->
           <div>
             <h3 class="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h3>
             <div class="space-y-6">
@@ -498,9 +700,7 @@
                 </div>
                 <div>
                   <h4 class="font-semibold text-gray-900 mb-1">Email</h4>
-                  <a href="mailto:akhtar.abbas8267@gmail.com" class="text-gray-600 hover:text-primary transition">
-                    akhtar.abbas8267@gmail.com
-                  </a>
+                  <a href="mailto:akhtar.abbas8267@gmail.com" class="text-gray-600 hover:text-primary transition">akhtar.abbas8267@gmail.com</a>
                 </div>
               </div>
               <div class="flex items-start">
@@ -509,9 +709,7 @@
                 </div>
                 <div>
                   <h4 class="font-semibold text-gray-900 mb-1">Phone</h4>
-                  <a href="tel:+923400673579" class="text-gray-600 hover:text-primary transition">
-                    +92 340 0673579
-                  </a>
+                  <a href="tel:+923400673579" class="text-gray-600 hover:text-primary transition">+92 340 0673579</a>
                 </div>
               </div>
               <div class="flex items-start">
@@ -521,7 +719,7 @@
                 <div>
                   <h4 class="font-semibold text-gray-900 mb-1">Location</h4>
                   <p class="text-gray-600">Islamabad, Pakistan</p>
-                  <p class="text-sm text-gray-500">Willing to relocate/</p>
+                  <p class="text-sm text-gray-500">Willing to relocate</p>
                 </div>
               </div>
             </div>
@@ -537,7 +735,6 @@
               </div>
             </div>
           </div>
-          <!-- Contact Form (unchanged) -->
           <div>
             <form id="contact-form" class="space-y-6">
               <div>
@@ -580,6 +777,51 @@
       <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script type="module" src="./main.js"></script>
+    <script>
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+      // Close mobile menu on link click
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+      });
+
+      // Scroll to top button
+      const scrollBtn = document.getElementById('scroll-to-top');
+      window.addEventListener('scroll', () => {
+        scrollBtn.classList.toggle('hidden', window.scrollY < 300);
+      });
+      scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // Project filter
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const projectCards = document.querySelectorAll('.project-card');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.dataset.filter;
+          projectCards.forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Contact form
+      document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const msg = document.getElementById('form-message');
+        msg.textContent = 'Thanks for reaching out! I will get back to you soon.';
+        msg.className = 'mt-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm';
+        this.reset();
+      });
+    </script>
   </body>
 </html>
