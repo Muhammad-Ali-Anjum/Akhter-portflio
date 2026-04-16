@@ -893,66 +893,52 @@
   </div>
 </div>
 <script>
-  const chatToggle = document.getElementById('chat-toggle');
-  const chatWindow = document.getElementById('chat-window');
-  const closeChat = document.getElementById('close-chat');
-  const chatForm = document.getElementById('chat-form');
-  const chatInput = document.getElementById('chat-input');
-  const chatMessages = document.getElementById('chat-messages');
+    // Tumhara Hugging Face Backend URL (wss for secure websockets)
+    const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
 
-  // Open/Close Chat
-  chatToggle.addEventListener('click', () => {
-    chatWindow.classList.toggle('hidden');
-  });
+    const chatInput = document.querySelector('#chat-input'); // Apni ID check kar lena
+    const chatContainer = document.querySelector('#chat-messages');
 
-  closeChat.addEventListener('click', () => {
-    chatWindow.classList.add('hidden');
-  });
+    // Jab connection open ho jaye
+    socket.onopen = () => {
+        console.log("Connected to HF Backend! 🔥");
+    };
 
-  // Handle Sending Message
-  chatForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const msg = chatInput.value.trim();
-    if (!msg) return;
+    // Jab Backend se response aye
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        appendMessage('bot', data.message);
+    };
 
-    // Add User Message to UI
-    appendMessage('user', msg);
-    chatInput.value = '';
-
-    // Show Typing Indicator
-    const typingId = appendMessage('bot', '...', true);
-
-    try {
-      // Yahan tum apna backend URL dalo ge (Hugging Face wala)
-      // Example: const response = await fetch('YOUR_BACKEND_URL', { ... });
-      
-      // Filhal test ke liye simple reply:
-      setTimeout(() => {
-        document.getElementById(typingId).innerText = "I'm still learning! Contact Akhtar at akhtar.abbas8267@gmail.com for direct queries.";
-      }, 1000);
-      
-    } catch (error) {
-      document.getElementById(typingId).innerText = "Oops! Connection issue.";
+    // Message send karne ka function
+    function sendMessage() {
+        const message = chatInput.value;
+        if (message.trim() !== "") {
+            appendMessage('user', message);
+            
+            // Backend ko bhej rahe hain
+            socket.send(JSON.stringify({
+                'message': message
+            }));
+            
+            chatInput.value = '';
+        }
     }
-  });
 
-  function appendMessage(sender, text, isTyping = false) {
-    const id = 'msg-' + Date.now();
-    const wrapper = document.createElement('div');
-    wrapper.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
-    
-    const bubble = document.createElement('div');
-    bubble.id = id;
-    bubble.className = sender === 'user' 
-      ? 'bg-primary text-white p-3 rounded-lg shadow-sm max-w-[80%]' 
-      : 'bg-white border p-3 rounded-lg shadow-sm max-w-[80%]';
-    bubble.innerText = text;
-    
-    wrapper.appendChild(bubble);
-    chatMessages.appendChild(wrapper);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    return id;
-  }
+    function appendMessage(sender, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
+        msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Enter key support
+    chatInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
 </script>
 
 
