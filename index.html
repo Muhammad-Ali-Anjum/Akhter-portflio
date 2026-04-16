@@ -283,26 +283,34 @@
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
 
-          <!-- Research Agent -->
           <div class="project-card bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2" data-category="ai-agents">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white">
-                <i class="fas fa-search text-xl"></i>
+                <i class="fas fa-brain text-xl"></i>
               </div>
-              <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">AI Agent</span>
+              <div class="flex gap-2">
+               <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Live</span>
+                <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">LangGraph</span>
+              </div>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Research Agent</h3>
-            <p class="text-gray-600 mb-4 text-sm">
-              An autonomous AI-powered research agent that can gather, analyze and synthesize information from multiple sources to answer complex queries.
-            </p>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LLM</span>
-              <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">AI Agents</span>
-            </div>
-            <a href="https://github.com/Akhtar-Abas/Research_Agent" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
-              <i class="fab fa-github mr-1"></i> View on GitHub
-            </a>
+  <h3 class="text-xl font-semibold text-gray-900 mb-2">AuraGraph AI | Autonomous Researcher</h3>
+  <p class="text-gray-600 mb-4 text-sm">
+    An advanced multi-agent system built with LangGraph that orchestrates autonomous research workflows. It gathers, analyzes, and synthesizes data via WebSockets for real-time reporting.
+  </p>
+  <div class="flex flex-wrap gap-2 mb-4">
+    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Python</span>
+    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Django Channels</span>
+    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">LangGraph</span>
+    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Daphne</span>
+  </div>
+  <div class="flex gap-4">
+    <a href="https://github.com/Akhtar-Abas/Research_Agent" target="_blank" class="inline-flex items-center text-sm text-primary hover:underline font-medium">
+      <i class="fab fa-github mr-1"></i> Code
+    </a>
+    <a href="https://huggingface.co/spaces/Akhtar-Abbas/Portfolio-Backed" target="_blank" class="inline-flex items-center text-sm text-purple-600 hover:underline font-medium">
+      <i class="fas fa-external-link-alt mr-1"></i> Live Demo
+    </a>
+  </div>
           </div>
 
           <!-- PDF Intelligence RAG -->
