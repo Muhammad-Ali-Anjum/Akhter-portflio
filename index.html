@@ -844,52 +844,55 @@
     </button>
 
     <script>
-      // Mobile menu toggle
-      const menuBtn = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  // --- Chat toggle ---
+  document.getElementById('chat-toggle').addEventListener('click', () => {
+    document.getElementById('chat-window').classList.toggle('hidden');
+  });
+  document.getElementById('close-chat').addEventListener('click', () => {
+    document.getElementById('chat-window').classList.add('hidden');
+  });
 
-      // Close mobile menu on link click
-      document.querySelectorAll('.mobile-nav-link').forEach(link => {
-        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-      });
+  // --- WebSocket ---
+  const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
+  const chatInput = document.getElementById('chat-input');
+  const chatContainer = document.getElementById('chat-messages');
 
-      // Scroll to top button
-      const scrollBtn = document.getElementById('scroll-to-top');
-      window.addEventListener('scroll', () => {
-        scrollBtn.classList.toggle('hidden', window.scrollY < 300);
-      });
-      scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  socket.onopen = () => console.log("Connected to HF Backend! 🔥");
 
-      // Project filter
-      const filterBtns = document.querySelectorAll('.filter-btn');
-      const projectCards = document.querySelectorAll('.project-card');
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    appendMessage('bot', data.message);
+  };
 
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const filter = btn.dataset.filter;
-          projectCards.forEach(card => {
-            if (filter === 'all' || card.dataset.category === filter) {
-              card.style.display = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-      });
+  socket.onerror = (err) => {
+    appendMessage('bot', 'Connection error. Please try again later.');
+    console.error('WebSocket error:', err);
+  };
 
-      // Contact form
-      document.getElementById('contact-form')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const msg = document.getElementById('form-message');
-        msg.textContent = 'Thanks for reaching out! I will get back to you soon.';
-        msg.className = 'mt-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm';
-        this.reset();
-      });
-    </script>
+  // --- Send message ---
+  function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message !== '') {
+      appendMessage('user', message);
+      socket.send(JSON.stringify({ message }));
+      chatInput.value = '';
+    }
+  }
 
+  function appendMessage(sender, text) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
+    msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
+    chatContainer.appendChild(msgDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+
+  // --- Form submit + Enter key ---
+  document.getElementById('chat-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendMessage();
+  });
+</script>
 
 <div id="chat-widget-container" class="fixed bottom-6 right-6 z-[60]">
   <button id="chat-toggle" class="bg-primary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
