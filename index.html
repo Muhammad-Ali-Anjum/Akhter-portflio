@@ -843,57 +843,7 @@
       <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script>
-  // --- Chat toggle ---
-  document.getElementById('chat-toggle').addEventListener('click', () => {
-    document.getElementById('chat-window').classList.toggle('hidden');
-  });
-  document.getElementById('close-chat').addEventListener('click', () => {
-    document.getElementById('chat-window').classList.add('hidden');
-  });
-
-  // --- WebSocket ---
-  const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
-  const chatInput = document.getElementById('chat-input');
-  const chatContainer = document.getElementById('chat-messages');
-
-  socket.onopen = () => console.log("Connected to HF Backend! 🔥");
-
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    appendMessage('bot', data.message);
-  };
-
-  socket.onerror = (err) => {
-    appendMessage('bot', 'Connection error. Please try again later.');
-    console.error('WebSocket error:', err);
-  };
-
-  // --- Send message ---
-  function sendMessage() {
-    const message = chatInput.value.trim();
-    if (message !== '') {
-      appendMessage('user', message);
-      socket.send(JSON.stringify({ message }));
-      chatInput.value = '';
-    }
-  }
-
-  function appendMessage(sender, text) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
-    msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
-    chatContainer.appendChild(msgDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-  }
-
-  // --- Form submit + Enter key ---
-  document.getElementById('chat-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    sendMessage();
-  });
-</script>
-
+  
 <div id="chat-widget-container" class="fixed bottom-6 right-6 z-[60]">
   <button id="chat-toggle" class="bg-primary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
     <i class="fas fa-comment-dots text-2xl"></i>
@@ -927,55 +877,58 @@
   </div>
 </div>
 <script>
-    // Tumhara Hugging Face Backend URL (wss for secure websockets)
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Chat toggle ---
+    document.getElementById('chat-toggle').addEventListener('click', () => {
+      document.getElementById('chat-window').classList.toggle('hidden');
+    });
+    document.getElementById('close-chat').addEventListener('click', () => {
+      document.getElementById('chat-window').classList.add('hidden');
+    });
+
+    // --- WebSocket ---
     const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
+    const chatInput = document.getElementById('chat-input');
+    const chatContainer = document.getElementById('chat-messages');
 
-    const chatInput = document.querySelector('#chat-input'); // Apni ID check kar lena
-    const chatContainer = document.querySelector('#chat-messages');
+    socket.onopen = () => console.log("Connected to HF Backend! 🔥");
 
-    // Jab connection open ho jaye
-    socket.onopen = () => {
-        console.log("Connected to HF Backend! 🔥");
-    };
-
-    // Jab Backend se response aye
     socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        appendMessage('bot', data.message);
+      const data = JSON.parse(event.data);
+      appendMessage('bot', data.message);
     };
 
-    // Message send karne ka function
+    socket.onerror = () => {
+      appendMessage('bot', 'Connection error. Please try again later.');
+    };
+
+    // --- Send message ---
     function sendMessage() {
-        const message = chatInput.value;
-        if (message.trim() !== "") {
-            appendMessage('user', message);
-            
-            // Backend ko bhej rahe hain
-            socket.send(JSON.stringify({
-                'message': message
-            }));
-            
-            chatInput.value = '';
-        }
+      const message = chatInput.value.trim();
+      if (message !== '') {
+        appendMessage('user', message);
+        socket.send(JSON.stringify({ message }));
+        chatInput.value = '';
+      }
     }
 
     function appendMessage(sender, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
-        msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
-        chatContainer.appendChild(msgDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
+      msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Enter key support
-    chatInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
+    // --- Form submit ---
+    document.getElementById('chat-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendMessage();
     });
+
+  });
 </script>
-
-
 
   </body>
 </html>
