@@ -879,7 +879,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Chat toggle ---
     document.getElementById('chat-toggle').addEventListener('click', () => {
       document.getElementById('chat-window').classList.toggle('hidden');
     });
@@ -887,41 +886,76 @@
       document.getElementById('chat-window').classList.add('hidden');
     });
 
-    // --- WebSocket ---
-    const socket = new WebSocket('wss://akhtar-abbas-portfolio-backed.hf.space/ws/chat/');
     const chatInput = document.getElementById('chat-input');
     const chatContainer = document.getElementById('chat-messages');
+    const conversationHistory = [];
 
-    socket.onopen = () => console.log("Connected to HF Backend! 🔥");
+    const SYSTEM_PROMPT = `You are Akhtar Abbas's AI assistant on his portfolio website. 
+    Answer questions about Akhtar professionally and helpfully.
+    
+    Key facts about Akhtar:
+    - Computer Science graduate specializing in Data Science, ML and AI
+    - Based in Islamabad, Pakistan (willing to relocate)
+    - Skills: Python, TensorFlow, Keras, Scikit-learn, NLP, LangGraph, RAG, Django
+    - Projects: AuraGraph AI, Pakistan Trip Planner Agent, PDF Intelligence RAG, Balti-English NMT (Final Year Project), and more
+    - Email: akhtar.abbas8267@gmail.com | Phone: +92 340 0673579
+    - GitHub: github.com/Akhtar-Abas | LinkedIn: linkedin.com/in/akhtar-abbas-163616241
+    - References: Sir Sajid Ali (NUST), Hasin Bano (UOBS)
+    Keep answers concise and friendly.`;
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      appendMessage('bot', data.message);
-    };
-
-    socket.onerror = () => {
-      appendMessage('bot', 'Connection error. Please try again later.');
-    };
-
-    // --- Send message ---
-    function sendMessage() {
+    async function sendMessage() {
       const message = chatInput.value.trim();
-      if (message !== '') {
-        appendMessage('user', message);
-        socket.send(JSON.stringify({ message }));
-        chatInput.value = '';
+      if (!message) return;
+
+      appendMessage('user', message);
+      chatInput.value = '';
+      conversationHistory.push({ role: 'user', content: message });
+
+      const thinking = appendThinking();
+
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            system: SYSTEM_PROMPT,
+            messages: conversationHistory
+          })
+        });
+
+        const data = await response.json();
+        const reply = data.content[0].text;
+        conversationHistory.push({ role: 'assistant', content: reply });
+
+        thinking.remove();
+        appendMessage('bot', reply);
+
+      } catch (err) {
+        thinking.remove();
+        appendMessage('bot', 'Sorry, something went wrong. Please email Akhtar directly at akhtar.abbas8267@gmail.com');
       }
     }
 
     function appendMessage(sender, text) {
       const msgDiv = document.createElement('div');
       msgDiv.className = sender === 'user' ? 'text-right mb-2' : 'text-left mb-2';
-      msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm">${text}</span>`;
+      msgDiv.innerHTML = `<span class="${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200'} p-2 rounded-lg inline-block text-sm max-w-[80%] text-left">${text}</span>`;
       chatContainer.appendChild(msgDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
+      return msgDiv;
     }
 
-    // --- Form submit ---
+    function appendThinking() {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'text-left mb-2';
+      msgDiv.innerHTML = `<span class="bg-gray-200 p-2 rounded-lg inline-block text-sm italic text-gray-500">Thinking...</span>`;
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return msgDiv;
+    }
+
     document.getElementById('chat-form').addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage();
